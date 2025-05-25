@@ -2,20 +2,27 @@
 "use client";
 
 import React, { useState } from "react";
-import SdkGeneratorForm, { SdkConfig } from "@/components/SdkGeneratorForm";
+import SdkGeneratorForm from "@/components/SdkGeneratorForm";
 import GeneratedSdkDisplay from "@/components/GeneratedSdkDisplay";
+import LoadingIndicator from "@/components/LoadingIndicator"; // <--- IMPORT NEW COMPONENT
 import { GenerateSdkResponse } from "@/lib/api";
 
 export default function HomePage() {
-  const [loading, setLoading] = useState<boolean>(false); // This state is already here
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [generatedSdk, setGeneratedSdk] = useState<GenerateSdkResponse | null>(
     null
   );
 
+  // Removed loadingMessageIndex, loadingMessages, didYouKnowIndex, didYouKnowFacts, useEffect related to these
+
   const handleSdkGenerated = (response: GenerateSdkResponse) => {
     setGeneratedSdk(response);
   };
+
+  function sdkNameForDownload(initialName: string): string {
+    return initialName.endsWith("Sdk") ? initialName : `${initialName}Sdk`;
+  }
 
   const currentSdkName = generatedSdk
     ? sdkNameForDownload(
@@ -23,12 +30,6 @@ export default function HomePage() {
           "generated-sdk"
       )
     : "";
-
-  function sdkNameForDownload(initialName: string): string {
-    // This is a simple heuristic based on your backend's response message
-    // You might want to pass the sdkName directly from the form submit handler
-    return initialName.endsWith("Sdk") ? initialName : `${initialName}Sdk`;
-  }
 
   return (
     <main className="container mx-auto p-4 md:p-8 min-h-screen flex flex-col justify-center items-center">
@@ -39,15 +40,9 @@ export default function HomePage() {
         Automate the creation of TypeScript API SDKs from documentation using
         intelligent AI agents.
       </p>
-
-      {/* Loading Indicator (this remains here, but we'll also update the button) */}
-      {loading && (
-        <div className="my-4 text-blue-400 text-lg">
-          Generating SDK... This may take a moment.
-          <span className="animate-pulse ml-2">💡</span>
-        </div>
-      )}
-
+      {/* Loading Indicator - Now a separate component */}
+      <LoadingIndicator isLoading={loading} />{" "}
+      {/* <--- USE NEW COMPONENT HERE */}
       {/* Error Message */}
       {error && (
         <div className="error-message">
@@ -58,7 +53,6 @@ export default function HomePage() {
           </p>
         </div>
       )}
-
       {/* Success Message */}
       {generatedSdk?.message && !loading && !error && (
         <div className="success-message">
@@ -66,15 +60,13 @@ export default function HomePage() {
           <p className="text-sm">{generatedSdk.message}</p>
         </div>
       )}
-
-      {/* SDK Generator Form - ADD isLoading PROP */}
+      {/* SDK Generator Form */}
       <SdkGeneratorForm
         onSdkGenerated={handleSdkGenerated}
         onLoading={setLoading}
         onError={setError}
         isLoading={loading}
       />
-
       {/* Display Generated SDK Code */}
       {generatedSdk && (
         <GeneratedSdkDisplay
