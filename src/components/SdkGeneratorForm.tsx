@@ -153,7 +153,7 @@ export default function SdkGeneratorForm({
                 setDocUrl(e.target.value);
                 setDocFile(null); // Clear file selection if URL is used
               }}
-              placeholder="https://petstore.swagger.io/v2/swagger.json"
+              placeholder="https://example.com/api/docs"
               className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               disabled={!!docFile} // Disable if file is selected
             />
@@ -164,7 +164,7 @@ export default function SdkGeneratorForm({
               htmlFor="docFile"
               className="block text-xs font-medium text-gray-400"
             >
-          Upload Documentation File (.md, .pdf, .docx,.json,.yaml,.yml):
+          Upload Documentation File (.md, .pdf, .docx,):
             </label>
             <input
               type="file"
@@ -173,7 +173,7 @@ export default function SdkGeneratorForm({
                 setDocFile(e.target.files ? e.target.files[0] : null);
                 setDocUrl(""); // Clear URL if file is uploaded
               }}
-              accept=".json,.yaml,.yml,.pdf,.docx,.pptx,.md"
+              accept=".pdf,.docx,.md,"
               className="mt-1 block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 cursor-pointer"
               disabled={!!docUrl} // Disable if URL is entered
             />
