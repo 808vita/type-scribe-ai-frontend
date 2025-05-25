@@ -1,3 +1,4 @@
+// src/app/page.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -6,7 +7,7 @@ import GeneratedSdkDisplay from "@/components/GeneratedSdkDisplay";
 import { GenerateSdkResponse } from "@/lib/api";
 
 export default function HomePage() {
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false); // This state is already here
   const [error, setError] = useState<string | null>(null);
   const [generatedSdk, setGeneratedSdk] = useState<GenerateSdkResponse | null>(
     null
@@ -39,7 +40,7 @@ export default function HomePage() {
         intelligent AI agents.
       </p>
 
-      {/* Loading Indicator */}
+      {/* Loading Indicator (this remains here, but we'll also update the button) */}
       {loading && (
         <div className="my-4 text-blue-400 text-lg">
           Generating SDK... This may take a moment.
@@ -66,11 +67,12 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* SDK Generator Form */}
+      {/* SDK Generator Form - ADD isLoading PROP */}
       <SdkGeneratorForm
         onSdkGenerated={handleSdkGenerated}
         onLoading={setLoading}
         onError={setError}
+        isLoading={loading}
       />
 
       {/* Display Generated SDK Code */}
@@ -78,7 +80,7 @@ export default function HomePage() {
         <GeneratedSdkDisplay
           sdkCode={generatedSdk.sdk_code}
           sdkName={currentSdkName}
-          sdkUsageExample={generatedSdk.sdk_usage_example || ""} // MODIFIED: Pass new field
+          sdkUsageExample={generatedSdk.sdk_usage_example || ""}
         />
       )}
     </main>
