@@ -78,6 +78,7 @@ export default function HomePage() {
         <GeneratedSdkDisplay
           sdkCode={generatedSdk.sdk_code}
           sdkName={currentSdkName}
+          sdkUsageExample={generatedSdk.sdk_usage_example || ""} // MODIFIED: Pass new field
         />
       )}
     </main>

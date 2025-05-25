@@ -5,6 +5,7 @@ import { stripIndent } from "common-tags"; // Useful for formatting template lit
 export interface GenerateSdkResponse {
   sdk_code: string;
   message: string;
+  sdk_usage_example?: string; // ADDED: New field for SDK usage example
 }
 
 // Function to call the backend and generate the SDK

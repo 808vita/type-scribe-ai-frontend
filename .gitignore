@@ -1,6 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 .env.local
+V2ipynb_to_py_converter.py
+project_structure.txt
 
 # dependencies
 /node_modules
