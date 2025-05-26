@@ -137,7 +137,7 @@ export default function LoadingIndicator({ isLoading }: LoadingIndicatorProps) {
         </div>
 
         <p className="text-sm text-gray-500 mb-2">
-          This process can take up to 2-3 minutes due to complex AI
+          This process can take up to 1-2 minutes due to complex AI
           computations.
         </p>
         <p
