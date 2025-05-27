@@ -19,6 +19,24 @@ interface SdkGeneratorFormProps {
   isLoading: boolean; // <--- ADDED THIS PROP
 }
 
+// --- NEW: Define interface for example data ---
+interface ExampleData {
+  name: string; // Display name for the button
+  sdkName: string; // Prefills the SDK Name input
+  docUrl: string; // Prefills the Documentation URL input
+  baseUrl: string; // Prefills the Base URL input
+}
+
+// --- UPDATED: Predefined example data - now only JSONPlaceholder ---
+const predefinedExamples: ExampleData[] = [
+  {
+    name: "JSONPlaceholder API",
+    sdkName: "JsonPlaceholder",
+    docUrl: "https://jsonplaceholder.typicode.com/",
+    baseUrl: "https://jsonplaceholder.typicode.com/",
+  },
+];
+
 export default function SdkGeneratorForm({
   onSdkGenerated,
   onLoading,
@@ -30,6 +48,15 @@ export default function SdkGeneratorForm({
   const [baseUrl, setBaseUrl] = useState<string>("");
   const [docUrl, setDocUrl] = useState<string>("");
   const [docFile, setDocFile] = useState<File | null>(null);
+
+  // --- NEW: handlePrefill function ---
+  const handlePrefill = (example: ExampleData) => {
+    setSdkName(example.sdkName);
+    setDocUrl(example.docUrl);
+    setBaseUrl(example.baseUrl);
+    setDocFile(null); // Clear any previously selected file input
+    onError(null); // Clear any previous error messages
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -78,7 +105,35 @@ export default function SdkGeneratorForm({
         Generate TypeScript SDK
       </h2>
 
-      {/* SDK Configuration fields... */}
+      {/* --- NEW: Quick Try Out Section --- */}
+      {/* Checks if there are any predefined examples to display the section */}
+      {predefinedExamples.length > 0 && (
+        <div className="mb-6 bg-gray-700 p-4 rounded-md">
+          <h3 className="text-xl font-semibold text-white mb-3">
+            Quick Try Out
+          </h3>
+          <p className="text-gray-300 text-sm mb-3">
+            Effortlessly test Type-Scribe AI by pre-filling the form with
+            example API documentation sources.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            {predefinedExamples.map((example, index) => (
+              <button
+                key={index}
+                type="button" // Important: Prevent form submission
+                onClick={() => handlePrefill(example)}
+                className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-md text-sm font-medium transition duration-200 flex-grow sm:flex-grow-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isLoading} // Disable while loading
+              >
+                Try {example.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      {/* End Quick Try Out Section */}
+
+      {/* SDK Configuration fields... (existing code) */}
       <div className="space-y-2">
         <label
           htmlFor="sdkName"
@@ -94,6 +149,8 @@ export default function SdkGeneratorForm({
           placeholder="e.g., UserServiceSdk"
           className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           required
+          // MERGED DISABLED LOGIC: Disable if already loading OR docFile is selected from a prior action or a preset
+          disabled={isLoading || !!docFile}
         />
       </div>
 
@@ -112,6 +169,8 @@ export default function SdkGeneratorForm({
           placeholder="e.g., 1.0.0"
           className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           required
+          // MERGED DISABLED LOGIC
+          disabled={isLoading || !!docFile}
         />
       </div>
 
@@ -130,6 +189,8 @@ export default function SdkGeneratorForm({
           placeholder="e.g., https://api.example.com"
           className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
           required
+          // MERGED DISABLED LOGIC
+          disabled={isLoading || !!docFile}
         />
       </div>
       {/* Documentation Source */}
@@ -143,7 +204,7 @@ export default function SdkGeneratorForm({
               htmlFor="docUrl"
               className="block text-xs font-medium text-gray-400"
             >
-          Documentation URL (e.g., GitHub README, API docs page):
+              Documentation URL (e.g., GitHub README, API docs page):
             </label>
             <input
               type="url"
@@ -155,7 +216,8 @@ export default function SdkGeneratorForm({
               }}
               placeholder="https://example.com/api/docs"
               className="mt-1 block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md text-white placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              disabled={!!docFile} // Disable if file is selected
+              // MERGED DISABLED LOGIC: Disable if loading OR if file is selected
+              disabled={isLoading || !!docFile}
             />
           </div>
           <p className="text-gray-400 md:self-center">OR</p>
@@ -164,7 +226,7 @@ export default function SdkGeneratorForm({
               htmlFor="docFile"
               className="block text-xs font-medium text-gray-400"
             >
-          Upload Documentation File (.md, .pdf, .docx,):
+              Upload Documentation File (.md, .pdf, .docx,):
             </label>
             <input
               type="file"
@@ -175,7 +237,8 @@ export default function SdkGeneratorForm({
               }}
               accept=".pdf,.docx,.md,"
               className="mt-1 block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600 cursor-pointer"
-              disabled={!!docUrl} // Disable if URL is entered
+              // MERGED DISABLED LOGIC: Disable if loading OR if URL is entered
+              disabled={isLoading || !!docUrl}
             />
           </div>
         </div>
