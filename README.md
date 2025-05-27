@@ -123,11 +123,17 @@ bun dev
 Open `http://localhost:3000` in your web browser to see the application.
 
 ## Project Structure
+
 `src/app/`: Contains the main Next.js pages and root layout (HomePage in `page.tsx`).
+
 `src/components/`: Reusable React components such as `SdkGeneratorForm`, `GeneratedSdkDisplay`, and `LoadingIndicator`.
+
 `src/lib/`: Utility functions and API interaction logic (`api.ts`).
+
 `public/`: Static assets.
+
 `styles/`: Global CSS and Tailwind CSS configuration.
+
 
 ## Scripts Available
 In the project directory, you can run:
